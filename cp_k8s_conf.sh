@@ -1,5 +1,3 @@
-# Script to check if kubeadm and kubectl are installed
-# and copy conf to user .kube/ directory from root or other location
 #!/bin/bash
 
 # Function to check if a command exists
@@ -12,8 +10,9 @@ if command_exists kubeadm && command_exists kubectl; then
     echo "kubeadm and kubectl are already installed."
 else
     # Prompt the user to install kubeadm and kubectl if they are not installed
-    read -p "kubeadm and/or kubectl are not installed. Would you like to install them? (y/n): " install_choice
-    if [ "$install_choice" == "y" || "$install_choice" == "Y" ]; then
+    echo "kubeadm and/or kubectl are not installed."
+    read -p "Would you like to install them? (y/n): " install_choice
+    if [ "$install_choice" = "y" ] || [ "$install_choice" = "Y" ]; then
         # Install kubeadm and kubectl
         echo "Installing kubeadm and kubectl..."
         sudo apt update
@@ -70,4 +69,3 @@ sudo cp -i "$CONFIG_PATH" $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 echo "Kubernetes config setup completed successfully."
-
