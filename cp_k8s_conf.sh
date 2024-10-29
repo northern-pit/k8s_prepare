@@ -1,5 +1,35 @@
-# Script to copy conf to user .kube/ directory from root or other 
+# Script to check if kubeadm and kubectl are installed
+# and copy conf to user .kube/ directory from root or other location
 #!/bin/bash
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Check if kubeadm and kubectl are installed
+if command_exists kubeadm && command_exists kubectl; then
+    echo "kubeadm and kubectl are already installed."
+else
+    # Prompt the user to install kubeadm and kubectl if they are not installed
+    read -p "kubeadm and/or kubectl are not installed. Would you like to install them? (y/n): " install_choice
+    if [[ "$install_choice" == "y" || "$install_choice" == "Y" ]]; then
+        # Install kubeadm and kubectl
+        echo "Installing kubeadm and kubectl..."
+        sudo apt update
+        sudo apt install -y apt-transport-https ca-certificates curl gpg
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt-get update
+        sudo apt-get install -y kubeadm kubectl
+        sudo apt-mark hold kubeadm kubectl
+        echo "kubeadm and kubectl have been installed."
+    else
+        echo "kubeadm and kubectl are required to continue. Exiting."
+        exit 1
+    fi
+fi
 
 # Define the default path for admin.conf
 DEFAULT_CONFIG_PATH="/etc/kubernetes/admin.conf"
@@ -40,3 +70,4 @@ sudo cp -i "$CONFIG_PATH" $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 echo "Kubernetes config setup completed successfully."
+
