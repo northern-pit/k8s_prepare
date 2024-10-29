@@ -24,6 +24,17 @@ else
         sudo apt-get install -y kubeadm kubectl
         sudo apt-mark hold kubeadm kubectl
         echo "kubeadm and kubectl have been installed."
+
+        # Enable kubectl completion functionality
+        echo "Enabling kubectl completion..."
+        mkdir -p $HOME/.kube
+        kubectl completion bash > $HOME/.kube/completion.bash.inc
+        printf "
+# kubectl shell completion
+source '$HOME/.kube/completion.bash.inc'
+" >> $HOME/.bash_profile
+        source $HOME/.bash_profile
+        echo "kubectl completion setup completed."
     else
         echo "kubeadm and kubectl are required to continue. Exiting."
         exit 1
