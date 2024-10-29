@@ -13,7 +13,7 @@ if command_exists kubeadm && command_exists kubectl; then
 else
     # Prompt the user to install kubeadm and kubectl if they are not installed
     read -p "kubeadm and/or kubectl are not installed. Would you like to install them? (y/n): " install_choice
-    if [[ "$install_choice" == "y" || "$install_choice" == "Y" ]]; then
+    if [ "$install_choice" == "y" || "$install_choice" == "Y" ]; then
         # Install kubeadm and kubectl
         echo "Installing kubeadm and kubectl..."
         sudo apt update
