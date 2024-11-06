@@ -57,4 +57,4 @@ fi
 echo "Applying changes by sourcing ~/.bashrc..."
 source ~/.bashrc
 
-echo "Autocompletion and alias setup complete for kubectl and kubeadm!"
+echo -e "Autocompletion and alias setup complete for kubectl and kubeadm!\nLogoout and login back to use autocompletion."
