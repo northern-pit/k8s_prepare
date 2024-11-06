@@ -1,13 +1,18 @@
 #!/bin/bash
 
+# Function to check if a command exists
+function command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 # Check if kubectl is installed
-if ! command -v kubectl &> /dev/null; then
+if ! command_exists kubectl; then
     echo "kubectl is not installed. Please install kubectl before running this script."
     exit 1
 fi
 
 # Check if kubeadm is installed
-if ! command -v kubeadm &> /dev/null; then
+if ! command_exists kubeadm; then
     echo "kubeadm is not installed. Please install kubeadm before running this script."
     exit 1
 fi
@@ -39,6 +44,7 @@ else
     echo "Alias 'k=kubectl' already exists in ~/.bashrc"
 fi
 
+# Set up autocompletion for the alias 'k'
 echo "Setting up autocompletion for 'k' alias..."
 if ! grep -Fxq "complete -o default -F __start_kubectl k" ~/.bashrc; then
     echo 'complete -o default -F __start_kubectl k' >> ~/.bashrc
@@ -47,8 +53,8 @@ else
     echo "Autocompletion for alias 'k' already enabled in ~/.bashrc"
 fi
 
-# Reload bashrc to apply changes
-echo "Reloading ~/.bashrc..."
+# Apply the changes
+echo "Applying changes by sourcing ~/.bashrc..."
 source ~/.bashrc
 
 echo "Autocompletion and alias setup complete for kubectl and kubeadm!"
